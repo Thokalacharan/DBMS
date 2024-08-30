@@ -1,3 +1,4 @@
+
 create table student(rollno number(5) primary key, name varchar(20), age number(2), bname varchar(5), perc number(5,2));
 
 create table branch(bname varchar(5) primary key, yoe number(4), intake number(3));
@@ -15,7 +16,80 @@ insert into branch values('IT', 2008, 180);
 insert into branch values('ECE', 2009, 120);
 insert into branch values('EEE', 2010, 60);
 
+
+
 1)
+/* find the branch names which got the highest average percentage*/
+select bname
+from student
+group by bname    
+having avg(perc)>=ALL  (select avg(perc)
+              from student
+              group by bname);
+              
+   output:
+   BNAME
+   ECE
+   
+2)
+/* find the students details whos percentage is more than overall average percentage all the students*/
+select *
+from student
+where perc > (select avg(perc)
+              from student);
+        output:
+              
+ ROLLNO	NAME	AGE	BNAME	PERC
+520	RAVI	19	CSE	75.5
+444	KUMAR	18	ECE	78
+530	RAVI	20	CSE	80
+420	RAMU	19	ECE	76.5
+
+
+3)
+/* find the names of the cse and it students set operations*/
+select name
+from student
+where bname='CSE'
+union
+select name
+from student
+where bname='IT';
+
+  output:
+  
+  NAME
+  ANIL
+  RAVI
+
+4)
+/* find the  common names of the cse and it students set operations*/
+select name
+from student
+where bname='CSE'
+intersect
+select name
+from student
+where bname='IT';
+
+  output:
+    
+    NAME
+    RAVI
+
+5)
+/* find the  branch names where no students are studying set operations*/
+select bname
+from branch
+minus
+select distinct bname
+from student;
+
+ output:
+  BNAME
+  EEE
+
+6)
 select name
 from student
 where perc > any (select avg(perc)
@@ -29,6 +103,6 @@ KUMAR
 RAVI
 RAMU
 
-2)
+
 
 
